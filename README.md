@@ -1,1 +1,1 @@
-# -STM32C031C6_Arduino_SPI_Baremetal
+# STM32C031C6_Arduino_SPI_Baremetal
