@@ -39,6 +39,8 @@ typedef enum
 	E_I2C_INIT_FAILED             = -306,   // General failure during I2C peripheral initialization
 	E_I2C_ACK_FAILED           	  = -307,   // Received NACK when expecting response
 
+	E_SPI_INIT_FAILED             = -308,   // General failure during SPI peripheral initialization
+
 	// --- 4. Timer Errors (-400 to -499) ---
 	E_TIMER_INIT_FAILED           = -401,   // General failure during TIMER peripheral initialization
 	E_TIMER_FREQ_TOO_HIGH         = -402,   // Frequency selected during initialization was too high
@@ -47,7 +49,6 @@ typedef enum
 
 	// --- 5. ADC Errors (-500 to -599) ---
 	E_ADC_INIT_FAILED             = -501,   // General failure during ADC peripheral initialization
-
 
 
     // --- Add more here as your project grows ---

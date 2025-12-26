@@ -113,15 +113,15 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   LED_t Onboard_LED;
-  initLED(&Onboard_LED, GPIOA, PIN_0);
+  check_Error(initLED(&Onboard_LED, GPIOA, PIN_0),__FILE__,__LINE__);
 
-  initCounter_Tmr3(1000);
-  startCounter_Tmr3();
+  check_Error(initCounter_Tmr3(1000),__FILE__,__LINE__);
+  check_Error(startCounter_Tmr3(),__FILE__,__LINE__);
 
-  initUSART2();
-  initSPI1();
+  check_Error(initUSART2(),__FILE__,__LINE__);
+  check_Error(initCtrl_SPI1(),__FILE__,__LINE__);
 
-  printMsgNL_USART2("Nucleo Init Successful!");
+  check_Error(printMsgNL_USART2("Nucleo Init Successful!"),__FILE__,__LINE__);
 
   __enable_irq();
   /* USER CODE END 2 */
@@ -130,19 +130,18 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
 
-  turnOnLED(&Onboard_LED);
+  check_Error(turnOnLED(&Onboard_LED),__FILE__,__LINE__);
 
   uint8_t readData;
 
    while(1){
-	   transmitAndRead_Spi1(10, &readData);
-	   printMsgNL_USART2("Received Data: %d", readData);
-	   delayTicks_Tmr3(1000);
+	   check_Error(exchangeByteCtrl_Spi1(80, &readData),__FILE__,__LINE__);
+	   check_Error(printMsgNL_USART2("Received Data: %d", readData),__FILE__,__LINE__);
+	   check_Error(delayTicks_Tmr3(1000),__FILE__,__LINE__);
 
-	   transmitAndRead_Spi1(50, &readData);
-	   printMsgNL_USART2("Received Data: %d", readData);
-	   delayTicks_Tmr3(1000);
-
+	   check_Error(exchangeByteCtrl_Spi1(50, &readData),__FILE__,__LINE__);
+	   check_Error(printMsgNL_USART2("Received Data: %d", readData),__FILE__,__LINE__);
+	   check_Error(delayTicks_Tmr3(1000),__FILE__,__LINE__);
    }
 
 
@@ -193,10 +192,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	Central_Error_Handler(E_ERROR_GENERIC, __FILE__, __LINE__);
   /* USER CODE END Error_Handler_Debug */
 }
 #ifdef USE_FULL_ASSERT

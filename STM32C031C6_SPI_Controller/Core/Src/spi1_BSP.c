@@ -1,6 +1,6 @@
 #include "spi1_BSP.h"
 
-void initSPI1(void)
+ErrorCode_t initCtrl_SPI1(void)
 {
 
 	/***Setting up GPIO Pins to SPI ******/
@@ -34,7 +34,6 @@ void initSPI1(void)
 
 	//Set NSS to default high
 	GPIOB->BSRR = GPIO_BSRR_BS0;
-
 
 	/***********Configuring SPI CR1 *******************/
 	// Enable SPI 1 Clock
@@ -72,11 +71,16 @@ void initSPI1(void)
 	//Enable the SPI, Arduino SPI should be enabled before this
 	SET_BIT(SPI1->CR1, SPI_CR1_SPE);
 
+    return E_OK;
 }
 
 
-ErrorCode_t transmitAndRead_Spi1(uint8_t transmitData, uint8_t *readData)
+ErrorCode_t exchangeByteCtrl_Spi1(uint8_t transmitData, uint8_t *readData)
 {
+	//Check for NULL Pointer
+	if(readData == 0)
+		return E_INVALID_ARGUMENT;
+
     // Assert NSS low
     GPIOB->BSRR = GPIO_BSRR_BR0;
 
