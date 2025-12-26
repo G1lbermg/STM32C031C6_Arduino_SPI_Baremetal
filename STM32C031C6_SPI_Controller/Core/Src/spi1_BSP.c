@@ -75,7 +75,7 @@ void initSPI1(void)
 }
 
 
-uint8_t spi1_TransferAndRead(uint8_t data)
+ErrorCode_t transmitAndRead_Spi1(uint8_t transmitData, uint8_t *readData)
 {
     // Assert NSS low
     GPIOB->BSRR = GPIO_BSRR_BR0;
@@ -84,14 +84,14 @@ uint8_t spi1_TransferAndRead(uint8_t data)
     while(!(SPI1->SR & SPI_SR_TXE))
         ;
     // Send byte
-    *((__IO uint8_t *)&SPI1->DR) = data;
+    *((__IO uint8_t *)&SPI1->DR) = transmitData;
 
     // Wait for RX buffer to contain received byte
     while(!(SPI1->SR & SPI_SR_RXNE))
         ;
 
     // Read the received byte
-   uint8_t received = *((__IO uint8_t *)&SPI1->DR);
+    *readData = *((__IO uint8_t *)&SPI1->DR);
 
     // Wait until SPI is not busy
    while(SPI1->SR & SPI_SR_BSY)
@@ -101,64 +101,6 @@ uint8_t spi1_TransferAndRead(uint8_t data)
     // Release NSS high
    GPIOB->BSRR = GPIO_BSRR_BS0;
 
-    return received;
-}
-
-
-void SPI_Transmit(uint8_t data)
-{
-		// Assert NSS low
-	    GPIOB->BSRR = GPIO_BSRR_BR0;
-
-	    // Wait until TX buffer empty
-	    while(!(SPI1->SR & SPI_SR_TXE))
-	        ;
-	    // Send byte
-	    SPI1->DR = data;
-
-	   // Wait until TX buffer empty
-	   while(!(SPI1->SR & SPI_SR_TXE))
-	    	;
-	    // Wait until SPI is not busy
-	    while(SPI1->SR & SPI_SR_BSY)
-	    	;
-
-	    //Perform a dummy read to clear the data register and read the SPI SR register to clear overrun
-	    uint16_t temp = SPI1->DR;
-	    temp = SPI1->SR;
-
-	    // Release NSS high
-	   GPIOB->BSRR = GPIO_BSRR_BS0;
-}
-
-uint8_t SPI_Receive(void)
-{
-	uint8_t data;
-
-	// Assert NSS low
-    GPIOB->BSRR = GPIO_BSRR_BR0;
-
-   // Wait until transmit buffer is empty
-   while (!(SPI1->SR & SPI_SR_TXE))
-        ;
-
-	// Wait until SPI is not busy
-	while(SPI1->SR & SPI_SR_BSY)
-		;
-
-	// Send dummy byte to generate clock
-	*((uint8_t *)&SPI1->DR) = 0xFF;  // use 8-bit access to DR
-
-    // Wait for RX buffer to contain received byte
-    while(!(SPI1->SR & SPI_SR_RXNE))
-        ;
-
-    // Read received data
-    data = *((uint8_t *) &SPI1->DR);
-
-    // Release NSS high
-   GPIOB->BSRR = GPIO_BSRR_BS0;
-
-   return data;
+    return E_OK;
 }
 

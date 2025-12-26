@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "error_check_utilities.h"
 #include "led_BSP.h"
+#include "timer3_BSP.h"
 #include "usart2_BSP.h"
 #include "spi1_BSP.h"
 #include "main.h"
@@ -114,12 +115,15 @@ int main(void)
   LED_t Onboard_LED;
   initLED(&Onboard_LED, GPIOA, PIN_0);
 
+  initCounter_Tmr3(1000);
+  startCounter_Tmr3();
+
   initUSART2();
   initSPI1();
 
   printMsgNL_USART2("Nucleo Init Successful!");
 
-  //__enable_irq();
+  __enable_irq();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -128,16 +132,16 @@ int main(void)
 
   turnOnLED(&Onboard_LED);
 
-  uint8_t data;
+  uint8_t readData;
 
    while(1){
-	   data = spi1_TransferAndRead(10);
-	   printMsgNL_USART2("Received Data: %d", data);
-	   LL_mDelay(1000);
+	   transmitAndRead_Spi1(10, &readData);
+	   printMsgNL_USART2("Received Data: %d", readData);
+	   delayTicks_Tmr3(1000);
 
-	   data = spi1_TransferAndRead(50);
-	   printMsgNL_USART2("Received Data: %d", data);
-	   LL_mDelay(1000);
+	   transmitAndRead_Spi1(50, &readData);
+	   printMsgNL_USART2("Received Data: %d", readData);
+	   delayTicks_Tmr3(1000);
 
    }
 
