@@ -4,7 +4,8 @@
 This repository demonstrates a bare-metal C implementation of SPI communication between an STM32 Nucleo-C031C6 (Controller) and Arduino Uno (Peripheral). The Nucleo sends the Arduino a number, and in response, the Arduino returns the same number added by 10. For the Nucleo, STM32's CubeMX is used to configure SWD/debug and clock initialization. All GPIO,timer, USART, and SPI manipulation are performed via direct memory-mapped register access. Similarly for the Arduino, all SPI parameters are configured using direct memory-mapped register access. The Arduino library is only used to initialize and utilize the serial port.
 
 ### Wiring
-<img width="2020" height="1132" alt="Nucleo to Arduino SPI" src="https://github.com/user-attachments/assets/3b2b0274-fee7-4450-a2f8-699ae85148d1" />
+<img width="2020" height="1132" alt="Nucleo to Arduino SPI" src="https://github.com/user-attachments/assets/ac41df9c-377e-4026-81c6-cba604dc5610" />
+
 
 ---
 
